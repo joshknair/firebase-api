@@ -4,6 +4,7 @@ import com.google.api.core.ApiFuture;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.WriteResult;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.FirestoreClient;
@@ -56,6 +57,17 @@ public class FirebaseRepository {
             log.error("Unknown exception occured", e);
         }
         return customer;
+    }
+
+    public Customer save(Customer customer) {
+        try {
+            ApiFuture<WriteResult> docRef = db.collection("customers").document(customer.getId()).set(customer);
+            docRef.get();
+            return customer;
+        }catch (Exception e) {
+            log.error("Error writing customer :: {}", customer);
+        }
+        return null;
     }
 }
 
